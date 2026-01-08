@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Un Destino Inesperado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #E8E2D6;      
+            --color-accent: #6B705C;  
+            --color-rose: #D4A373;    
+            --color-red: #A44A3F;     
+            --color-text: #1A1A1A;    
+            --color-card: #F4F1EA;    
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            scroll-behavior: smooth;
+        }
+        h1, h2, .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- STICKERS REALISTAS --- */
+        .sticker-real {
+            position: absolute;
+            z-index: 20;
+            filter: drop-shadow(4px 6px 5px rgba(0,0,0,0.25));
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .sticker-real svg {
+            filter: drop-shadow(0 0 1px rgba(255,255,255,0.8));
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(var(--rot-start)); }
+            50% { transform: rotate(var(--rot-end)); }
+        }
+        @keyframes float-y {
+            0%, 100% { transform: translateY(0) rotate(var(--base-rot)); }
+            50% { transform: translateY(-12px) rotate(var(--base-rot)); }
+        }
+
+        .anim-sway { animation: sway 4s ease-in-out infinite; }
+        .anim-float { animation: float-y 6s ease-in-out infinite; }
+
+        #intro-container {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-bg);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #intro-container.hidden-anim {
+            opacity: 0;
+            transform: scale(1.2);
+            filter: blur(20px);
+            pointer-events: none;
+        }
+
+        .wax-seal-btn {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .seal-circle {
+            width: 80px;
+            height: 80px;
+            background: var(--color-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-bg);
+            box-shadow: 0 10px 20px rgba(164, 74, 63, 0.4), inset 0 0 15px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+
+        .invitation-card {
+            max-width: 700px;
+            width: 90%;
+            margin: 0 auto;
+            background: var(--color-card);
+            padding: 3rem;
+            box-shadow: 0 30px 60px -12px rgba(0,0,0,0.15);
+            border-radius: 4px;
+            border-top: 8px solid var(--color-accent);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease 0.8s;
+            position: relative;
+        }
+
+        .invitation-card.reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .rose-section {
+            background-color: var(--color-rose);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stars-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .info-box {
+            background-color: rgba(244, 241, 234, 0.85); /* Mayor opacidad para visibilidad */
+            backdrop-filter: blur(8px);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 12px 30px -10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 140px;
+        }
+    </style>
+</head>
+<body class="overflow-hidden">
+
+    <!-- PANTALLA INICIAL -->
+    <div id="intro-container">
+        <div class="flex flex-col items-center">
+            <p class="mb-8 uppercase tracking-[0.4em] text-stone-500 text-xs font-semibold">Mensaje Confidencial</p>
+            <div class="wax-seal-btn" onclick="openInvitation()">
+                <div class="seal-circle">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z"/>
+                    </svg>
+                </div>
+                <div class="absolute inset-0 bg-red-800/20 rounded-full animate-ping"></div>
+            </div>
+            <p class="mt-8 text-stone-600 font-medium text-sm italic tracking-widest animate-pulse">Toca el sello para descubrir</p>
+        </div>
+    </div>
+
+    <main id="main-scroll" class="opacity-0 transition-opacity duration-1000">
+        
+        <!-- SECCIÓN 1: CARTA -->
+        <section class="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden">
+            <div class="sticker-real top-[8%] left-[5%] anim-sway" style="--rot-start: -15deg; --rot-end: -5deg;">
+                <svg width="100" height="100" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" fill="#f0f0f0" stroke="#ccc" stroke-width="2"/>
+                    <path d="M50 20 L55 50 L50 80 L45 50 Z" fill="#A44A3F"/>
+                    <path d="M50 80 L55 50 L50 50 L45 50 Z" fill="#333"/>
+                    <text x="46" y="18" font-size="9" fill="#333" font-weight="bold">N</text>
+                </svg>
+            </div>
+
+            <div class="invitation-card" id="invitation-card">
+                <div class="sticker-real -top-6 -right-12" style="transform: rotate(25deg);">
+                    <div class="bg-red-700 text-white font-bold px-5 py-2 border-4 border-double border-white rounded-sm shadow-xl tracking-tighter" style="font-size: 16px;">
+                        TOP SECRET
+                    </div>
+                </div>
+                <span class="text-stone-500 uppercase tracking-[0.3em] text-[10px] mb-8 block font-bold">Invitación Exclusiva</span>
+                <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-10 serif italic leading-tight">¡Preparen sus maletas!</h1>
+                <div class="text-gray-800 leading-relaxed space-y-6 serif text-lg md:text-xl">
+                    <p>Hay momentos en la vida que merecen ser celebrados de una manera especial. Porque se lo merecen, porque la aventura nos llama y porque los mejores recuerdos son los que no se planean...</p>
+                    <p class="font-medium">Hemos preparado algo mágico para ustedes. No pregunten a dónde, solo confíen.</p>
+                </div>
+                <div class="mt-12 pt-8 border-t border-stone-200 flex justify-between items-center text-stone-400 text-xs uppercase tracking-widest">
+                    <span>Enero 2026</span>
+                    <span class="italic font-serif normal-case text-lg text-stone-600">Con cariño, Tu Familia</span>
+                </div>
+            </div>
+
+            <div id="scroll-hint" class="mt-12 flex flex-col items-center">
+                <p class="text-stone-500 mb-2 text-xs uppercase tracking-widest">Desliza para ver los detalles</p>
+                <svg class="w-6 h-6 text-stone-500 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: INFO (ROSADA) -->
+        <section class="min-h-screen rose-section text-[#1A1A1A] flex flex-col items-center justify-center p-8 relative">
+            <div class="stars-overlay"></div>
+
+            <div class="z-10 text-center max-w-5xl w-full px-4">
+                <h2 class="text-4xl md:text-6xl mb-12 font-bold tracking-tight serif italic text-[#F4F1EA] drop-shadow-md">Logística del Destino</h2>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="info-box transform -rotate-2">
+                        <p class="text-[#6B705C] uppercase tracking-widest text-[10px] mb-2 font-bold">Salida</p>
+                        <p class="text-xl font-bold">Dom. 11/01/26</p>
+                    </div>
+                    
+                    <div class="info-box transform rotate-3">
+                        <p class="text-[#6B705C] uppercase tracking-widest text-[10px] mb-2 font-bold">Regreso</p>
+                        <p class="text-xl font-bold">Mié. 14/01/26</p>
+                    </div>
+
+                    <div class="info-box transform -rotate-1 border-dashed border-2 border-[#A44A3F]/40">
+                        <p class="text-[#A44A3F] uppercase tracking-widest text-[10px] mb-2 font-bold">📍 Lugar</p>
+                        <p class="text-2xl font-black italic serif text-gray-900">¡SORPRESA!</p>
+                    </div>
+
+                    <div class="info-box transform rotate-2 border-dashed border-2 border-[#A44A3F]/40">
+                        <p class="text-[#A44A3F] uppercase tracking-widest text-[10px] mb-2 font-bold">⏰ Hora</p>
+                        <p class="text-2xl font-black italic serif text-gray-900">SORPRESA</p>
+                    </div>
+                </div>
+                <p class="mt-12 text-[#F4F1EA]/90 serif italic text-lg">Toda la información será revelada a su debido tiempo...</p>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: DRESS CODE -->
+        <section class="min-h-screen bg-[#F4F1EA] flex flex-col items-center justify-center p-8 py-24 relative overflow-hidden">
+            <div class="max-w-6xl w-full">
+                <h2 class="text-3xl md:text-4xl text-center mb-24 underline decoration-[#A44A3F] underline-offset-8 uppercase tracking-[0.3em] font-bold text-gray-800">Código de Vestimenta</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-16">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="mb-10 p-8 bg-stone-200/50 rounded-full anim-float">
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#A44A3F" stroke-width="1.2"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        </div>
+                        <h3 class="font-bold text-xl mb-4 serif">DOMINGO</h3>
+                        <p class="text-gray-600 text-sm italic">Prendas cómodas y versátiles.</p>
+                    </div>
+                    <div class="flex flex-col items-center text-center">
+                        <div class="mb-10 p-8 bg-stone-200/50 rounded-full">
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#6B705C" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                        </div>
+                        <h3 class="font-bold text-xl mb-4 serif">LUNES y MARTES</h3>
+                        <p class="text-gray-600 text-sm italic">Casual de día, elegante de noche.</p>
+                    </div>
+                    <div class="flex flex-col items-center text-center">
+                        <div class="mb-10 p-8 bg-stone-200/50 rounded-full">
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#D4A373" stroke-width="1.2"><path d="M18 8a3 3 0 0 0-3-3H5a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V8Z"/><path d="M18 12h4v4h-4z"/></svg>
+                        </div>
+                        <h3 class="font-bold text-xl mb-4 serif">MIÉRCOLES</h3>
+                        <p class="text-gray-600 text-sm italic">Ropa relajada para el regreso.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="py-24 bg-stone-200/30 text-center border-t border-stone-200">
+            <p class="serif italic text-3xl text-stone-400 tracking-[0.2em]">La cuenta atrás comienza...</p>
+        </footer>
+    </main>
+
+    <script>
+        function openInvitation() {
+            const intro = document.getElementById('intro-container');
+            const mainScroll = document.getElementById('main-scroll');
+            const card = document.getElementById('invitation-card');
+            intro.classList.add('hidden-anim');
+            mainScroll.classList.remove('opacity-0');
+            document.body.classList.remove('overflow-hidden');
+            setTimeout(() => { card.classList.add('reveal'); }, 500);
+        }
+    </script>
+</body>
+</html>
